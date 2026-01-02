@@ -8,6 +8,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.questfirebase_088.view.EntrySiswaScreen
 import com.example.questfirebase_088.view.HomeScreen
+import com.example.questfirebase_088.view.route.DestinasiDetail
 import com.example.questfirebase_088.view.route.DestinasiEntry
 import com.example.questfirebase_088.view.route.DestinasiHome
 
@@ -34,7 +35,7 @@ fun HostNavigasi(
                 navigateToItemEntry = { navController.navigate(DestinasiEntry.route) },
                 navigateToItemUpdate = {
                     // Navigasi ke detail dengan membawa argumen ID
-                    //navController.navigate("${DestinasiDetail.route}/$it")
+                    navController.navigate("${DestinasiDetail.route}/$it")
                 }
             )
         }

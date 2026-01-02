@@ -7,9 +7,9 @@ import kotlinx.coroutines.tasks.await
 interface RepositorySiswa {
     suspend fun getDataSiswa(): List<Siswa>
     suspend fun postDataSiswa(siswa: Siswa)
-    suspend fun getSiswaById(id: Long): Siswa
-    suspend fun updateSiswa(siswa: Siswa)
-    suspend fun deleteSiswa(siswa: Siswa)
+    suspend fun getSiswaById(id: String): Siswa?     // <-- Ubah ke String, tambahkan nullable '?'
+    suspend fun updateSiswa(id: String, siswa: Siswa) // <-- Ubah agar lebih eksplisit
+    suspend fun deleteSiswa(id: String)
 }
 
 class FirebaseRepositorySiswa : RepositorySiswa {
@@ -20,7 +20,7 @@ class FirebaseRepositorySiswa : RepositorySiswa {
         return try {
             collection.get().await().documents.map { doc ->
                 Siswa(
-                    id = doc.getLong("id")?.toLong() ?: 0L,
+                    id = doc.id,
                     nama = doc.getString("nama") ?: "",
                     alamat = doc.getString("alamat") ?: "",
                     telpon = doc.getString("telpon") ?: ""
@@ -42,30 +42,20 @@ class FirebaseRepositorySiswa : RepositorySiswa {
     }
 
     // --- TAMBAHAN UNTUK DETAIL & EDIT ---
-    override suspend fun getSiswaById(id: Long): Siswa {
-        return try {
-            val documentSnapshot = collection.document(id.toString()).get().await()
-            Siswa(
-                id = documentSnapshot.getLong("id")?.toLong() ?: 0L,
-                nama = documentSnapshot.getString("nama") ?: "",
-                alamat = documentSnapshot.getString("alamat") ?: "",
-                telpon = documentSnapshot.getString("telpon") ?: ""
-            )
-        } catch (e: Exception) {
-            Siswa()
-        }
+    override suspend fun getSiswaById(id: String): Siswa? {
+        // Menerima String, tidak perlu .toString()
+        val snapshot = collection.document(id).get().await()
+        // Konversi ke objek Siswa, kembalikan null jika tidak ada
+        return snapshot.toObject(Siswa::class.java)?.copy(id = snapshot.id)
     }
 
-    override suspend fun updateSiswa(siswa: Siswa) {
-        // Di Firestore, set() dengan ID yang sama akan menimpa (update)
-        postDataSiswa(siswa)
+    override suspend fun updateSiswa(id: String, siswa: Siswa) {
+        // Menerima String, langsung gunakan untuk menimpa dokumen
+        collection.document(id).set(siswa).await()
     }
 
-    override suspend fun deleteSiswa(siswa: Siswa) {
-        try {
-            collection.document(siswa.id.toString()).delete().await()
-        } catch (e: Exception) {
-            throw Exception("Gagal menghapus data siswa: ${e.message}")
-        }
+    override suspend fun deleteSiswa(id: String) {
+        // Menerima String, langsung gunakan untuk menghapus
+        collection.document(id).delete().await()
     }
 }
