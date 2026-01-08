@@ -61,6 +61,16 @@ fun HostNavigasi(
                 navigateBack = { navController.navigate(DestinasiHome.route) }
             )
         }
-
+        composable(
+            HalamanEdit.routeWithArgs,
+            arguments = listOf(navArgument(HalamanEdit.itemIdArg) {
+                type = NavType.LongType
+            })
+        ) {
+            EditSiswaScreen(
+                navigateBack = { navController.navigate(DestinasiHome.route) },
+                onNavigateUp = { navController.navigateUp() }
+            )
+        }
     }
 }
