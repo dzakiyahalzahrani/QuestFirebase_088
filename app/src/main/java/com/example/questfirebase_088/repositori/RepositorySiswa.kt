@@ -64,7 +64,14 @@ class FirebaseRepositorySiswa : RepositorySiswa {
         }
     }
 
-
+    override suspend fun editSatuSiswa(id: Long, siswa: Siswa) {
+        // Cari dokumen berdasarkan field "id", lalu update
+        val querySnapshot = collection.whereEqualTo("id", id).get().await()
+        for (document in querySnapshot.documents) {
+            // Kita update dokumen yang ditemukan dengan data baru
+            collection.document(document.id).set(siswa).await()
+        }
+    }
     override suspend fun hapusSatuSiswa(id: Long) {
         val querySnapshot = collection.whereEqualTo("id", id).get().await()
         for (document in querySnapshot.documents) {
