@@ -114,7 +114,7 @@ fun HomeBody(
 fun LoadingScreen(modifier: Modifier = Modifier) {
     Image(
         modifier = modifier.size(200.dp),
-        painter = painterResource(r.drawable.loading_img), // Pastikan ada gambar ini
+        painter = painterResource(R.drawable.loading_img), // Pastikan ada gambar ini
         contentDescription = stringResource(R.string.loading)
     )
 }
