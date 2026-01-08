@@ -141,7 +141,7 @@ fun DaftarSiswa(
     modifier: Modifier = Modifier
 ) {
     LazyColumn(modifier = modifier) {
-        items(items = itemSiswa, key = { it.Id }  ) { person ->
+        items(items = itemSiswa, key = { it.docId }  ) { person ->
             ItemSiswa(
                 siswa = person,
                 modifier = Modifier
