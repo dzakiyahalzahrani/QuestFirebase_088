@@ -1,14 +1,15 @@
 package com.example.questfirebase_088.modeldata
 
 data class Siswa(
-    val id: String = "",
+    val docId: String = "",
+    val id: Long = 0L,
     val nama: String = "",
     val alamat: String = "",
     val telpon: String = ""
 )
 
 data class DetailSiswa(
-    val id: String = "",
+    val id: Long = 0L,
     val nama: String = "",
     val alamat: String = "",
     val telpon: String = ""
